@@ -1,2 +1,4 @@
 env/
 Resume and Cover Letter/
+__pycache__/
+config.py
