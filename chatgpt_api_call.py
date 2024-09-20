@@ -1,7 +1,7 @@
 from openai import OpenAI
 import config  
 
-def get_chatgpt_response(prompt, model="gpt-3.5-turbo-instruct", max_tokens=100, temperature=0):
+def get_chatgpt_response(prompt, model="gpt-3.5-turbo-instruct", max_tokens=120, temperature=0.05):
     client = OpenAI(api_key=config.OPENAI_API_KEY)
     
     response = client.completions.create(
