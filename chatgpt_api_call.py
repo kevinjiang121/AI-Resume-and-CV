@@ -1,35 +1,45 @@
 from openai import OpenAI
-import config
+import config 
 
+# Initialize the OpenAI client
 client = OpenAI(api_key=config.OPENAI_API_KEY)
 
-assistant = client.beta.assistants.create(
-  name="Math Tutor",
-  instructions="You are a personal math tutor. Write and run code to answer math questions.",
-  tools=[{"type": "code_interpreter"}],
-  model="gpt-4o",
-)
+def openai_assistant_call(prompt):
 
-thread = client.beta.threads.create()
+    # Send a message to the thread with the user-provided prompt
+    message = client.beta.threads.messages.create(
+        thread_id=config.THREAD_ID,
+        role="user",
+        content=prompt
+    )
+    
+    # Create and poll a run
+    run = client.beta.threads.runs.create_and_poll(
+        thread_id=config.THREAD_ID,
+        assistant_id=config.ASSISTANT_ID,
+        instructions="Please address the user as Jane Doe. The user has a premium account."
+    )
+    
+    # Check run status and print response
+    if run.status == 'completed': 
+        messages = client.beta.threads.messages.list(
+            thread_id=config.THREAD_ID
+        )
+        last_message = messages.data[0]
+        response = last_message.content[0].text.value
+        print(response)
+    else:
+        print(run.status)
 
-message = client.beta.threads.messages.create(
-  thread_id=thread.id,
-  role="user",
-  content="Hi, what is 1+1?"
-)
+def get_thread_history(thread_id):
+    thread_messages = client.beta.threads.messages.list(thread_id)
+    thread_list = list()
+    for threads in thread_messages:
+        thread_list.append(threads.content[0].text.value)
+    print(thread_list)
 
-run = client.beta.threads.runs.create_and_poll(
-  thread_id=thread.id,
-  assistant_id=assistant.id,
-  instructions="Please address the user as Jane Doe. The user has a premium account."
-)
-
-if run.status == 'completed': 
-  messages = client.beta.threads.messages.list(
-    thread_id=thread.id
-  )
-  last_message = messages.data[0]
-  response = last_message.content[0].text.value
-  print(response)
-else:
-  print(run.status)
+# Example of calling the function with a user-provided prompt
+if __name__ == "__main__":
+    user_prompt = input("Enter your prompt for ChatGPT: ")
+    openai_assistant_call(user_prompt)
+    # get_thread_history(config.THREAD_ID)
