@@ -4,7 +4,7 @@ import config
 # Initialize the OpenAI client
 client = OpenAI(api_key=config.OPENAI_API_KEY)
 
-def openai_assistant_call(prompt):
+def openai_assistant_call(prompt, name):
 
     # Send a message to the thread with the user-provided prompt
     message = client.beta.threads.messages.create(
@@ -17,7 +17,7 @@ def openai_assistant_call(prompt):
     run = client.beta.threads.runs.create_and_poll(
         thread_id=config.THREAD_ID,
         assistant_id=config.ASSISTANT_ID,
-        instructions="Please address the user as Jane Doe. The user has a premium account."
+        instructions="Address user as " + name + ". Help with Resume and Cover Letter request"
     )
     
     # Check run status and print response
@@ -41,5 +41,5 @@ def get_thread_history(thread_id):
 # Example of calling the function with a user-provided prompt
 if __name__ == "__main__":
     user_prompt = input("Enter your prompt for ChatGPT: ")
-    openai_assistant_call(user_prompt)
+    openai_assistant_call(user_prompt, "John")
     # get_thread_history(config.THREAD_ID)
