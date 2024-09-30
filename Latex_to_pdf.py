@@ -113,7 +113,9 @@ def generate_pdf():
     # Define context with variables from latexconfig
     context = {
         'name': latexconfig.name,
-        'email': latexconfig.email
+        'email': latexconfig.email,
+        'phonenumber': latexconfig.phonenumber,
+        'github': latexconfig.github
         # Add more variables from latexconfig as needed
     }
     
