@@ -14,4 +14,8 @@ def read_experience(file_path='experience.json'):
 
 if __name__ == "__main__":
     experience = read_experience('experience.json')
-    print(experience["projects"][1])
+    work_experience = experience['experience'][0]
+    education = experience['education'][0]
+    project = experience['projects'][0]
+    skill = experience['skill'][0]
+    print(skill)
