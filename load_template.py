@@ -15,8 +15,18 @@ def load_education(experience):
     )
     return rendered
 
+def load_skills(experience):
+    skills = experience['skills'][0]
+    template_path = os.path.join('LaTeX Templates', 'skills.tex')
+    with open(template_path, 'r', encoding='utf-8') as file:
+        template = Template(file.read())
+    rendered = template.render(
+        skills=skills
+    )
+    return rendered
 
 if __name__ == "__main__":
     experience = read_experience.read_experience("experience.json")
     education = load_education(experience)
-    print(education) # test render
+    skill = load_skills(experience)
+    print(skill) # test render

@@ -119,7 +119,8 @@ def generate_pdf():
         'email': latexconfig.email,
         'phonenumber': latexconfig.phonenumber,
         'github': latexconfig.github,
-        'education': load_template.load_education(experience)
+        'education': load_template.load_education(experience),
+        'skills': load_template.load_skills(experience)
         # Add more variables from latexconfig as needed
     }
     
