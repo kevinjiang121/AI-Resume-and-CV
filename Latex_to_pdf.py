@@ -5,6 +5,8 @@ import tkinter as tk
 from tkinter import messagebox, scrolledtext, filedialog
 from jinja2 import Template
 import latexconfig  # Importing latexconfig to access latexconfig.name and latexconfig.email
+import load_template
+from read_experience import read_experience
 
 def replace_placeholder(template_path, context):
     """
@@ -111,11 +113,13 @@ def generate_pdf():
         return
     
     # Define context with variables from latexconfig
+    experience = read_experience("experience.json")
     context = {
         'name': latexconfig.name,
         'email': latexconfig.email,
         'phonenumber': latexconfig.phonenumber,
-        'github': latexconfig.github
+        'github': latexconfig.github,
+        'education': load_template.load_education(experience)
         # Add more variables from latexconfig as needed
     }
     
