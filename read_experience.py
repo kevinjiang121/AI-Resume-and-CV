@@ -11,11 +11,3 @@ def read_experience(file_path='experience.json'):
         print(f"Error: The file '{file_path}' contains invalid JSON.")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-
-if __name__ == "__main__":
-    experience = read_experience('experience.json')
-    work_experience = experience['experience'][0]
-    education = experience['education'][0]
-    project = experience['projects'][0]
-    skill = experience['skill'][0]
-    print(skill)
