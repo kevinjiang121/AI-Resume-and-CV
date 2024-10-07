@@ -120,8 +120,9 @@ def generate_pdf():
         'phonenumber': latexconfig.phonenumber,
         'github': latexconfig.github,
         'education': load_template.load_education(experience),
-        'skills': load_template.load_skills(experience)
-        # Add more variables from latexconfig as needed
+        'skills': load_template.load_skills(experience),
+        'work_experience': load_template.load_work_experience(experience),
+        'projects': load_template.load_project(experience)
     }
     
     # Replace placeholders in the template

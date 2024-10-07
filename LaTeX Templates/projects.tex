@@ -1,0 +1,11 @@
+\section*{Projects}
+{% for project in projects %}
+\textbf{ {{project.title}}} \\
+\vspace{-9pt}
+\begin{itemize}
+  {% for responsibility in project.responsibilities %}
+  \item {{ responsibility }}
+  {% endfor %}
+\end{itemize}
+
+{% endfor %}

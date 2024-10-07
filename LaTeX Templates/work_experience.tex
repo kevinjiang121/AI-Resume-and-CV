@@ -1,0 +1,11 @@
+\section*{Experience}
+{% for job in work_experience %}
+\textbf{ {{job.position}}, } \href{ {{job["company website"]}}}{{job.company}} -- {{job.City}}, {{job.State}} \hfill {{job.duration}} \\
+\vspace{-9pt}
+\begin{itemize}
+  {% for responsibility in job.responsibilities %}
+  \item {{responsibility}}
+  {% endfor %}
+\end{itemize}
+
+{% endfor %}
