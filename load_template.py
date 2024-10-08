@@ -26,28 +26,11 @@ def load_skills(experience):
     return rendered
 
 def load_project(experience):
-    """
-    Renders the Projects section of the LaTeX document using Jinja2.
-
-    Parameters:
-    - experience (dict): Dictionary containing the projects data from experience.json.
-
-    Returns:
-    - str: Rendered LaTeX string for the Projects section.
-    """
-    # Extract the list of projects
     projects = experience.get('projects', [])
-    
-    # Define the path to the projects.tex template
     template_path = os.path.join('LaTeX Templates', 'projects.tex')
-    
-    # Read the LaTeX template
     with open(template_path, 'r', encoding='utf-8') as file:
         template = Template(file.read())
-    
-    # Render the template with the projects data
     rendered = template.render(projects=projects)
-    
     return rendered
 
 def load_work_experience(experience):
@@ -57,7 +40,6 @@ def load_work_experience(experience):
         template = Template(file.read())
     rendered = template.render(work_experience=work_experiences)
     return rendered
-
 
 if __name__ == "__main__":
     experience = read_experience.read_experience("experience.json")

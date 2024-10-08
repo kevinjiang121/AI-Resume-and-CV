@@ -131,6 +131,7 @@ def generate_pdf():
         return  # Error occurred during rendering
     
     # Generate PDF
+    print(final_latex)
     success = latex_to_pdf(final_latex, output_filename=file_name)
     if success:
         messagebox.showinfo("Success", f"PDF '{file_name}' has been generated successfully in 'Resume and Cover Letter' folder.")
