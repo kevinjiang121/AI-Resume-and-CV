@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI  # Ensure this import is correct based on your OpenAI library usage
 import load_template
+import json
 from read_experience import read_experience
 
 # Load environment variables from .env file
@@ -20,19 +21,21 @@ def openai_assistant_call(prompt, name):
     - prompt (str): The user's input prompt.
     - name (str): The name to address the user as in the assistant's response.
     """
+    experience = str(read_experience())
+    payload = experience + " " + prompt
+    
     try:
         # Send a message to the thread with the user-provided prompt
         message = client.beta.threads.messages.create(
             thread_id=os.getenv('THREAD_ID'),
             role="user",
-            content=prompt
+            content=payload
         )
 
         # Create and poll a run
         run = client.beta.threads.runs.create_and_poll(
             thread_id=os.getenv('THREAD_ID'),
-            assistant_id=os.getenv('ASSISTANT_ID'),
-            instructions=f"Address user as {name}. Help with Resume and Cover Letter request"
+            assistant_id=os.getenv('ASSISTANT_ID')
         )
 
         # Check run status and print response
@@ -65,6 +68,4 @@ def get_thread_history(thread_id):
 
 # Example of calling the function with a user-provided prompt
 if __name__ == "__main__":
-    user_prompt = input("Enter your prompt for ChatGPT: ")
-    openai_assistant_call(user_prompt, "John")
-    # get_thread_history(os.getenv('THREAD_ID'))
+    print(read_experience())

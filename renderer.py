@@ -112,3 +112,8 @@ def call_openai_assistant():
     
     except Exception as e:
         print(f"An error occurred while calling OpenAI Assistant: {e}")
+
+if __name__ == "__main__":
+    # Here you can call functions to test the functionality
+    # For example, to test the call_openai_assistant function:
+    call_openai_assistant()
