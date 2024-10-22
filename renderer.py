@@ -7,6 +7,7 @@ from jinja2 import Template
 from read_experience import read_experience
 import load_template
 import latexconfig  # Ensure this imports the necessary variables
+import chatgpt_api_call  # Import the chatgpt_api_call module
 
 def replace_placeholder(template_path, context):
     try:
@@ -91,3 +92,23 @@ def generate_pdf(file_name):
     # Generate PDF
     success = latex_to_pdf(final_latex, output_filename=file_name)
     return success
+
+def call_openai_assistant():
+    """
+    Prompts the user for a prompt and calls the OpenAI assistant with the provided prompt and name.
+    """
+    try:
+        # Prompt the user for input
+        prompt = input("Enter your prompt for ChatGPT: ").strip()
+        if not prompt:
+            print("Prompt cannot be empty.")
+            return
+        
+        # Retrieve the name from latexconfig.py
+        name = latexconfig.name
+        
+        # Call the openai_assistant_call method from chatgpt_api_call.py
+        chatgpt_api_call.openai_assistant_call(prompt, name)
+    
+    except Exception as e:
+        print(f"An error occurred while calling OpenAI Assistant: {e}")
