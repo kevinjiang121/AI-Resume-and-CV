@@ -27,10 +27,28 @@ def on_create_background():
     """
     messagebox.showinfo("Info", "Create Background button clicked. Functionality to be implemented.")
 
+def on_test():
+    """
+    Handler for the Test button.
+    Currently does nothing but can be implemented in the future.
+    """
+    messagebox.showinfo("Info", "Test button clicked. Functionality to be implemented.")
+
+# Function to handle placeholder text in the Job Description Text widget
+def on_focus_in(event):
+    if text_job_description.get("1.0", "end-1c") == "Job Description":
+        text_job_description.delete("1.0", "end")
+        text_job_description.config(fg="black")
+
+def on_focus_out(event):
+    if text_job_description.get("1.0", "end-1c") == "":
+        text_job_description.insert("1.0", "Job Description")
+        text_job_description.config(fg="grey")
+
 # Setting up the GUI
 root = tk.Tk()
 root.title("LaTeX to PDF Generator")
-root.geometry("700x200")  # Increased height to accommodate the new button
+root.geometry("700x500")  # Increased height to accommodate taller text box
 root.resizable(False, False)
 
 # File Name Label and Entry
@@ -38,29 +56,62 @@ label_filename = tk.Label(root, text="File Name:", font=("Arial", 12))
 label_filename.pack(pady=(20, 5))
 
 entry_filename = tk.Entry(root, width=60, font=("Arial", 12))
-entry_filename.pack(pady=(0, 20))
+entry_filename.pack(pady=(0, 10))
+
+# Job Description Label and Text Box
+label_job_description = tk.Label(root, text="Job Description:", font=("Arial", 12))
+label_job_description.pack(pady=(0, 5))
+
+# Increased the height from 5 to 10
+text_job_description = tk.Text(root, width=60, height=15, font=("Arial", 12), fg="grey")
+text_job_description.pack(pady=(0, 20))
+
+# Insert placeholder text
+text_job_description.insert("1.0", "Job Description")
+
+# Bind focus events to handle placeholder text
+text_job_description.bind("<FocusIn>", on_focus_in)
+text_job_description.bind("<FocusOut>", on_focus_out)
+
+# Buttons Frame
+buttons_frame = tk.Frame(root)
+buttons_frame.pack(pady=(0, 20))
 
 # Generate PDF Button
 button_generate = tk.Button(
-    root,
+    buttons_frame,
     text="Generate PDF",
     command=on_generate,
     font=("Arial", 12),
     bg="green",
-    fg="white"
+    fg="white",
+    width=18
 )
-button_generate.pack(pady=(0, 10))  # Added some padding below the Generate button
+button_generate.pack(side=tk.LEFT, padx=5)
 
 # Create Background Button
 button_create_background = tk.Button(
-    root,
+    buttons_frame,
     text="Create Background",
-    command=on_create_background,  # Currently points to a placeholder function
+    command=on_create_background,
     font=("Arial", 12),
     bg="blue",
-    fg="white"
+    fg="white",
+    width=18
 )
-button_create_background.pack(pady=(0, 20))  # Added padding below the Create Background button
+button_create_background.pack(side=tk.LEFT, padx=5)
+
+# Test Button
+button_test = tk.Button(
+    buttons_frame,
+    text="Test",
+    command=on_test,
+    font=("Arial", 12),
+    bg="orange",
+    fg="white",
+    width=18
+)
+button_test.pack(side=tk.LEFT, padx=5)
 
 # Start the GUI event loop
 root.mainloop()
