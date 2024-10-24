@@ -93,27 +93,25 @@ def generate_pdf(file_name):
     success = latex_to_pdf(final_latex, output_filename=file_name)
     return success
 
-def call_openai_assistant():
+def call_openai_assistant(prompt):
     """
-    Prompts the user for a prompt and calls the OpenAI assistant with the provided prompt and name.
+    Calls the OpenAI assistant with the provided prompt and name.
     """
     try:
-        # Prompt the user for input
-        prompt = input("Enter your prompt for ChatGPT: ").strip()
         if not prompt:
             print("Prompt cannot be empty.")
             return
-        
+
         # Retrieve the name from latexconfig.py
         name = latexconfig.name
-        
+
         # Call the openai_assistant_call method from chatgpt_api_call.py
         chatgpt_api_call.openai_assistant_call(prompt, name)
-    
+
     except Exception as e:
         print(f"An error occurred while calling OpenAI Assistant: {e}")
 
 if __name__ == "__main__":
     # Here you can call functions to test the functionality
     # For example, to test the call_openai_assistant function:
-    call_openai_assistant()
+    call_openai_assistant("Hello") 
