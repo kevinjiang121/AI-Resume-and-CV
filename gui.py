@@ -30,9 +30,21 @@ def on_create_background():
 def on_test():
     """
     Handler for the Test button.
-    Currently does nothing but can be implemented in the future.
+    Retrieves the job description from the text box and passes it to the OpenAI assistant.
     """
-    messagebox.showinfo("Info", "Test button clicked. Functionality to be implemented.")
+    prompt = text_job_description.get("1.0", "end-1c").strip()
+    
+    # Check if the prompt is empty or still the placeholder
+    if not prompt or prompt == "Job Description":
+        messagebox.showwarning("Input Required", "Please enter a job description before testing.")
+        return
+    
+    try:
+        # Call the OpenAI assistant with the prompt
+        renderer.call_openai_assistant(prompt)
+        messagebox.showinfo("Success", "OpenAI Assistant has processed your job description.")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred while calling OpenAI Assistant:\n{e}")
 
 # Function to handle placeholder text in the Job Description Text widget
 def on_focus_in(event):
@@ -48,7 +60,7 @@ def on_focus_out(event):
 # Setting up the GUI
 root = tk.Tk()
 root.title("LaTeX to PDF Generator")
-root.geometry("700x500")  # Increased height to accommodate taller text box
+root.geometry("700x600")  # Increased height to accommodate taller text box
 root.resizable(False, False)
 
 # File Name Label and Entry
@@ -62,7 +74,7 @@ entry_filename.pack(pady=(0, 10))
 label_job_description = tk.Label(root, text="Job Description:", font=("Arial", 12))
 label_job_description.pack(pady=(0, 5))
 
-# Increased the height from 5 to 10
+# Increased the height from 5 to 15
 text_job_description = tk.Text(root, width=60, height=15, font=("Arial", 12), fg="grey")
 text_job_description.pack(pady=(0, 20))
 
