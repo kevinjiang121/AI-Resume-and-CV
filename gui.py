@@ -5,9 +5,7 @@ from tkinter import messagebox
 import renderer  # Ensure renderer.py is in the same directory or adjust the import path accordingly
 
 def on_generate():
-    """
-    Handler for the Generate button. Retrieves input from the GUI and generates the PDF.
-    """
+    # Handler for the Generate button.
     file_name = entry_filename.get().strip()
     if not file_name:
         messagebox.showwarning("Input Required", "Please enter a file name for the PDF.")
@@ -20,27 +18,56 @@ def on_generate():
     except Exception as e:
         messagebox.showerror("Failure", f"PDF generation failed.\n\n{e}")
 
-def on_create_background():
+def load_background_page():
     """
-    Handler for the Create Background button.
-    Currently does nothing but can be implemented in the future.
+    Clears the main GUI content and loads the background entry layout.
     """
-    messagebox.showinfo("Info", "Create Background button clicked. Functionality to be implemented.")
+    # Hide main widgets
+    for widget in root.winfo_children():
+        widget.pack_forget()
+
+    # Background Label and Text Box
+    label_background = tk.Label(root, text="Background Information:", font=("Arial", 12))
+    label_background.pack(pady=(20, 5))
+
+    text_background = tk.Text(root, width=60, height=15, font=("Arial", 12))
+    text_background.pack(pady=(0, 20))
+
+    # Return Button to go back to the main page
+    button_return = tk.Button(
+        root,
+        text="Return to Main",
+        command=load_main_page,
+        font=("Arial", 12),
+        bg="red",
+        fg="white",
+        width=18
+    )
+    button_return.pack(pady=(10, 10))
+
+def load_main_page():
+    """
+    Restores the main page layout for file name entry and job description.
+    """
+    # Clear background page widgets
+    for widget in root.winfo_children():
+        widget.pack_forget()
+
+    # Repack main widgets
+    label_filename.pack(pady=(20, 5))
+    entry_filename.pack(pady=(0, 10))
+    label_job_description.pack(pady=(0, 5))
+    text_job_description.pack(pady=(0, 20))
+    buttons_frame.pack(pady=(0, 20))
 
 def on_test():
-    """
-    Handler for the Test button.
-    Retrieves the job description from the text box and passes it to the OpenAI assistant.
-    """
+    # Handler for the Test button.
     prompt = text_job_description.get("1.0", "end-1c").strip()
-    
-    # Check if the prompt is empty or still the placeholder
     if not prompt or prompt == "Job Description":
         messagebox.showwarning("Input Required", "Please enter a job description before testing.")
         return
     
     try:
-        # Call the OpenAI assistant with the prompt
         renderer.call_openai_assistant(prompt)
         messagebox.showinfo("Success", "OpenAI Assistant has processed your job description.")
     except Exception as e:
@@ -60,36 +87,21 @@ def on_focus_out(event):
 # Setting up the GUI
 root = tk.Tk()
 root.title("LaTeX to PDF Generator")
-root.geometry("700x600")  # Increased height to accommodate taller text box
+root.geometry("700x600")
 root.resizable(False, False)
 
-# File Name Label and Entry
+# Main Page Widgets
 label_filename = tk.Label(root, text="File Name:", font=("Arial", 12))
-label_filename.pack(pady=(20, 5))
-
 entry_filename = tk.Entry(root, width=60, font=("Arial", 12))
-entry_filename.pack(pady=(0, 10))
 
-# Job Description Label and Text Box
 label_job_description = tk.Label(root, text="Job Description:", font=("Arial", 12))
-label_job_description.pack(pady=(0, 5))
-
-# Increased the height from 5 to 15
 text_job_description = tk.Text(root, width=60, height=15, font=("Arial", 12), fg="grey")
-text_job_description.pack(pady=(0, 20))
-
-# Insert placeholder text
 text_job_description.insert("1.0", "Job Description")
-
-# Bind focus events to handle placeholder text
 text_job_description.bind("<FocusIn>", on_focus_in)
 text_job_description.bind("<FocusOut>", on_focus_out)
 
-# Buttons Frame
 buttons_frame = tk.Frame(root)
-buttons_frame.pack(pady=(0, 20))
 
-# Generate PDF Button
 button_generate = tk.Button(
     buttons_frame,
     text="Generate PDF",
@@ -101,11 +113,10 @@ button_generate = tk.Button(
 )
 button_generate.pack(side=tk.LEFT, padx=5)
 
-# Create Background Button
 button_create_background = tk.Button(
     buttons_frame,
     text="Create Background",
-    command=on_create_background,
+    command=load_background_page,  # Updated command to load background page on main GUI
     font=("Arial", 12),
     bg="blue",
     fg="white",
@@ -113,7 +124,6 @@ button_create_background = tk.Button(
 )
 button_create_background.pack(side=tk.LEFT, padx=5)
 
-# Test Button
 button_test = tk.Button(
     buttons_frame,
     text="Test",
@@ -124,6 +134,9 @@ button_test = tk.Button(
     width=18
 )
 button_test.pack(side=tk.LEFT, padx=5)
+
+# Load the main page initially
+load_main_page()
 
 # Start the GUI event loop
 root.mainloop()
