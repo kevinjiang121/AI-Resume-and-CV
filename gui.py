@@ -20,30 +20,40 @@ def on_generate():
 
 def load_background_page():
     """
-    Clears the main GUI content and loads the background entry layout.
+    Clears the main GUI content and loads a new layout with two placeholder buttons.
     """
     # Hide main widgets
     for widget in root.winfo_children():
         widget.pack_forget()
 
-    # Background Label and Text Box
-    label_background = tk.Label(root, text="Background Information:", font=("Arial", 12))
-    label_background.pack(pady=(20, 5))
-
-    text_background = tk.Text(root, width=60, height=15, font=("Arial", 12))
-    text_background.pack(pady=(0, 20))
-
-    # Return Button to go back to the main page
-    button_return = tk.Button(
+    # Add two placeholder buttons and a back button to this layout
+    button_personal_detail = tk.Button(
         root,
-        text="Return to Main",
+        text="Personal Detail",
+        font=("Arial", 12),
+        width=18
+    )
+    button_personal_detail.pack(pady=(20, 10))
+
+    button_create_background = tk.Button(
+        root,
+        text="Create Background",
+        font=("Arial", 12),
+        width=18
+    )
+    button_create_background.pack(pady=(10, 20))
+
+    # Back Button to return to the main page
+    button_back = tk.Button(
+        root,
+        text="Back",
         command=load_main_page,
         font=("Arial", 12),
         bg="red",
         fg="white",
         width=18
     )
-    button_return.pack(pady=(10, 10))
+    button_back.pack(pady=(10, 10))
 
 def load_main_page():
     """
