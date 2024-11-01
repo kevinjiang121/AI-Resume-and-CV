@@ -31,7 +31,10 @@ def load_background_page():
         root,
         text="Personal Detail",
         font=("Arial", 12),
-        width=18
+        width=18,
+        bg="blue",
+        fg="white",
+        command=load_personal_detail_page
     )
     button_personal_detail.pack(pady=(20, 10))
 
@@ -39,7 +42,9 @@ def load_background_page():
         root,
         text="Create Background",
         font=("Arial", 12),
-        width=18
+        width=18,
+        bg="blue",
+        fg="white"
     )
     button_create_background.pack(pady=(10, 20))
 
@@ -54,6 +59,75 @@ def load_background_page():
         width=18
     )
     button_back.pack(pady=(10, 10))
+
+def load_personal_detail_page():
+    """
+    Clears the current layout and loads a new page with five textboxes for personal details
+    and three buttons (Back to Previous, Back to Main, Create Personal Profile).
+    """
+    # Clear current widgets
+    for widget in root.winfo_children():
+        widget.pack_forget()
+
+    # Labels and Entry Widgets for Personal Details
+    label_name = tk.Label(root, text="Name:", font=("Arial", 12))
+    label_name.pack(pady=(10, 5))
+    entry_name = tk.Entry(root, width=50, font=("Arial", 12))
+    entry_name.pack(pady=(0, 10))
+
+    label_email = tk.Label(root, text="Email:", font=("Arial", 12))
+    label_email.pack(pady=(10, 5))
+    entry_email = tk.Entry(root, width=50, font=("Arial", 12))
+    entry_email.pack(pady=(0, 10))
+
+    label_phone = tk.Label(root, text="Phone Number:", font=("Arial", 12))
+    label_phone.pack(pady=(10, 5))
+    entry_phone = tk.Entry(root, width=50, font=("Arial", 12))
+    entry_phone.pack(pady=(0, 10))
+
+    label_github = tk.Label(root, text="GitHub:", font=("Arial", 12))
+    label_github.pack(pady=(10, 5))
+    entry_github = tk.Entry(root, width=50, font=("Arial", 12))
+    entry_github.pack(pady=(0, 10))
+
+    # Buttons Frame
+    buttons_frame = tk.Frame(root)
+    buttons_frame.pack(pady=(20, 10))
+
+    # Back to Previous Page Button
+    button_back_previous = tk.Button(
+        buttons_frame,
+        text="Back to Previous",
+        command=load_background_page,
+        font=("Arial", 12),
+        bg="red",
+        fg="white",
+        width=18
+    )
+    button_back_previous.pack(side=tk.LEFT, padx=5)
+
+    # Back to Main Page Button
+    button_back_main = tk.Button(
+        buttons_frame,
+        text="Back to Main",
+        command=load_main_page,
+        font=("Arial", 12),
+        bg="red",
+        fg="white",
+        width=18
+    )
+    button_back_main.pack(side=tk.LEFT, padx=5)
+
+    # Create Personal Profile Button (no action yet)
+    button_create_profile = tk.Button(
+        buttons_frame,
+        text="Create Personal Profile",
+        font=("Arial", 12),
+        bg="blue",
+        fg="white",
+        width=18
+    )
+    button_create_profile.pack(side=tk.LEFT, padx=5)
 
 def load_main_page():
     """
@@ -117,7 +191,7 @@ button_generate = tk.Button(
     text="Generate PDF",
     command=on_generate,
     font=("Arial", 12),
-    bg="green",
+    bg="blue",
     fg="white",
     width=18
 )
@@ -139,7 +213,7 @@ button_test = tk.Button(
     text="Test",
     command=on_test,
     font=("Arial", 12),
-    bg="orange",
+    bg="blue",
     fg="white",
     width=18
 )
