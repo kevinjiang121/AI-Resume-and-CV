@@ -2,6 +2,8 @@
 
 import tkinter as tk
 from tkinter import messagebox
+import json
+import os
 import renderer  # Ensure renderer.py is in the same directory or adjust the import path accordingly
 
 def on_generate():
@@ -60,11 +62,41 @@ def load_background_page():
     )
     button_back.pack(pady=(10, 10))
 
+def create_personal_profile():
+    """
+    Creates a JSON file with personal details entered by the user.
+    """
+    # Get input values from textboxes
+    profile_data = {
+        "Name": entry_name.get().strip(),
+        "Email": entry_email.get().strip(),
+        "Phone Number": entry_phone.get().strip(),
+        "GitHub": entry_github.get().strip()
+    }
+
+    # Check if all fields have been filled
+    if not all(profile_data.values()):
+        messagebox.showwarning("Input Required", "Please fill in all fields before creating the profile.")
+        return
+
+    # Define file path
+    file_path = os.path.join("Background and Experience", "personal_profile.json")
+
+    try:
+        # Write to JSON file
+        with open(file_path, 'w') as json_file:
+            json.dump(profile_data, json_file, indent=4)
+        messagebox.showinfo("Success", f"Personal profile has been saved to '{file_path}'.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to create personal profile.\n\n{e}")
+
 def load_personal_detail_page():
     """
     Clears the current layout and loads a new page with five textboxes for personal details
     and three buttons (Back to Previous, Back to Main, Create Personal Profile).
     """
+    global entry_name, entry_email, entry_phone, entry_github
+
     # Clear current widgets
     for widget in root.winfo_children():
         widget.pack_forget()
@@ -118,14 +150,15 @@ def load_personal_detail_page():
     )
     button_back_main.pack(side=tk.LEFT, padx=5)
 
-    # Create Personal Profile Button (no action yet)
+    # Create Personal Profile Button
     button_create_profile = tk.Button(
         buttons_frame,
         text="Create Personal Profile",
         font=("Arial", 12),
         bg="blue",
         fg="white",
-        width=18
+        width=18,
+        command=create_personal_profile
     )
     button_create_profile.pack(side=tk.LEFT, padx=5)
 
@@ -200,7 +233,7 @@ button_generate.pack(side=tk.LEFT, padx=5)
 button_create_background = tk.Button(
     buttons_frame,
     text="Create Background",
-    command=load_background_page,  # Updated command to load background page on main GUI
+    command=load_background_page,
     font=("Arial", 12),
     bg="blue",
     fg="white",
