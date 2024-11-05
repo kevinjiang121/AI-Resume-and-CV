@@ -64,7 +64,7 @@ def generate_pdf(file_name):
     if not file_name.lower().endswith('.pdf'):
         file_name += '.pdf'
     
-    # Path to the LaTeX template
+    # Path to the LaTeX resume template
     script_dir = os.path.dirname(os.path.abspath(__file__))
     template_path = os.path.join(script_dir, 'LaTeX Templates', 'resume_template.tex')
     
@@ -84,6 +84,35 @@ def generate_pdf(file_name):
         'skills': load_template.load_skills(experience),
         'work_experience': load_template.load_work_experience(experience),
         'projects': load_template.load_project(experience)
+    }
+    
+    # Replace placeholders in the template
+    final_latex = replace_placeholder(template_path, context)
+    
+    # Generate PDF
+    success = latex_to_pdf(final_latex, output_filename=file_name)
+    return success
+
+def generate_cover_letter(file_name):
+    if not file_name.lower().endswith('.pdf'):
+        file_name += '.pdf'
+    
+    # Path to the LaTeX cover letter template
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    template_path = os.path.join(script_dir, 'LaTeX Templates', 'cover_letter_template.tex')
+    
+    if not os.path.exists(template_path):
+        raise FileNotFoundError(f"The template file was not found at '{template_path}'.")
+    
+    # Read experience data
+    experience = read_experience("experience.json")
+    
+    # Define context with variables from latexconfig and rendered sections
+    context = {
+        'name': latexconfig.name,
+        'email': latexconfig.email,
+        'phonenumber': latexconfig.phonenumber,
+        'github': latexconfig.github
     }
     
     # Replace placeholders in the template

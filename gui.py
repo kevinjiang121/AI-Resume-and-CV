@@ -2,33 +2,41 @@
 
 import tkinter as tk
 from tkinter import messagebox
-import json
-import os
 import renderer  # Ensure renderer.py is in the same directory or adjust the import path accordingly
 
-def on_generate():
-    # Handler for the Generate button.
+def on_generate_resume():
+    # Handler for the Generate Resume button.
     file_name = entry_filename.get().strip()
     if not file_name:
-        messagebox.showwarning("Input Required", "Please enter a file name for the PDF.")
+        messagebox.showwarning("Input Required", "Please enter a file name for the resume.")
         return
     
     try:
         success = renderer.generate_pdf(file_name)
         if success:
-            messagebox.showinfo("Success", f"PDF '{file_name}' has been generated successfully in 'Resume and Cover Letter' folder.")
+            messagebox.showinfo("Success", f"Resume '{file_name}' has been generated successfully in 'Resume and Cover Letter' folder.")
     except Exception as e:
-        messagebox.showerror("Failure", f"PDF generation failed.\n\n{e}")
+        messagebox.showerror("Failure", f"Resume generation failed.\n\n{e}")
+
+def on_generate_cover_letter():
+    # Handler for the Generate Cover Letter button.
+    file_name = entry_filename.get().strip()
+    if not file_name:
+        messagebox.showwarning("Input Required", "Please enter a file name for the cover letter.")
+        return
+    
+    try:
+        success = renderer.generate_cover_letter(file_name)
+        if success:
+            messagebox.showinfo("Success", f"Cover Letter '{file_name}' has been generated successfully in 'Resume and Cover Letter' folder.")
+    except Exception as e:
+        messagebox.showerror("Failure", f"Cover Letter generation failed.\n\n{e}")
 
 def load_background_page():
-    """
-    Clears the main GUI content and loads a new layout with two placeholder buttons.
-    """
-    # Hide main widgets
+    # Clears the main GUI content and loads a new layout with two placeholder buttons.
     for widget in root.winfo_children():
         widget.pack_forget()
 
-    # Add two placeholder buttons and a back button to this layout
     button_personal_detail = tk.Button(
         root,
         text="Personal Detail",
@@ -50,7 +58,6 @@ def load_background_page():
     )
     button_create_background.pack(pady=(10, 20))
 
-    # Back Button to return to the main page
     button_back = tk.Button(
         root,
         text="Back",
@@ -62,46 +69,12 @@ def load_background_page():
     )
     button_back.pack(pady=(10, 10))
 
-def create_personal_profile():
-    """
-    Creates a JSON file with personal details entered by the user.
-    """
-    # Get input values from textboxes
-    profile_data = {
-        "Name": entry_name.get().strip(),
-        "Email": entry_email.get().strip(),
-        "Phone Number": entry_phone.get().strip(),
-        "GitHub": entry_github.get().strip()
-    }
-
-    # Check if all fields have been filled
-    if not all(profile_data.values()):
-        messagebox.showwarning("Input Required", "Please fill in all fields before creating the profile.")
-        return
-
-    # Define file path
-    file_path = os.path.join("Background and Experience", "personal_profile.json")
-
-    try:
-        # Write to JSON file
-        with open(file_path, 'w') as json_file:
-            json.dump(profile_data, json_file, indent=4)
-        messagebox.showinfo("Success", f"Personal profile has been saved to '{file_path}'.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Failed to create personal profile.\n\n{e}")
-
 def load_personal_detail_page():
-    """
-    Clears the current layout and loads a new page with five textboxes for personal details
-    and three buttons (Back to Previous, Back to Main, Create Personal Profile).
-    """
     global entry_name, entry_email, entry_phone, entry_github
 
-    # Clear current widgets
     for widget in root.winfo_children():
         widget.pack_forget()
 
-    # Labels and Entry Widgets for Personal Details
     label_name = tk.Label(root, text="Name:", font=("Arial", 12))
     label_name.pack(pady=(10, 5))
     entry_name = tk.Entry(root, width=50, font=("Arial", 12))
@@ -122,11 +95,9 @@ def load_personal_detail_page():
     entry_github = tk.Entry(root, width=50, font=("Arial", 12))
     entry_github.pack(pady=(0, 10))
 
-    # Buttons Frame
     buttons_frame = tk.Frame(root)
     buttons_frame.pack(pady=(20, 10))
 
-    # Back to Previous Page Button
     button_back_previous = tk.Button(
         buttons_frame,
         text="Back to Previous",
@@ -138,7 +109,6 @@ def load_personal_detail_page():
     )
     button_back_previous.pack(side=tk.LEFT, padx=5)
 
-    # Back to Main Page Button
     button_back_main = tk.Button(
         buttons_frame,
         text="Back to Main",
@@ -150,27 +120,20 @@ def load_personal_detail_page():
     )
     button_back_main.pack(side=tk.LEFT, padx=5)
 
-    # Create Personal Profile Button
     button_create_profile = tk.Button(
         buttons_frame,
         text="Create Personal Profile",
         font=("Arial", 12),
         bg="blue",
         fg="white",
-        width=18,
-        command=create_personal_profile
+        width=18
     )
     button_create_profile.pack(side=tk.LEFT, padx=5)
 
 def load_main_page():
-    """
-    Restores the main page layout for file name entry and job description.
-    """
-    # Clear background page widgets
     for widget in root.winfo_children():
         widget.pack_forget()
 
-    # Repack main widgets
     label_filename.pack(pady=(20, 5))
     entry_filename.pack(pady=(0, 10))
     label_job_description.pack(pady=(0, 5))
@@ -178,7 +141,6 @@ def load_main_page():
     buttons_frame.pack(pady=(0, 20))
 
 def on_test():
-    # Handler for the Test button.
     prompt = text_job_description.get("1.0", "end-1c").strip()
     if not prompt or prompt == "Job Description":
         messagebox.showwarning("Input Required", "Please enter a job description before testing.")
@@ -190,7 +152,6 @@ def on_test():
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred while calling OpenAI Assistant:\n{e}")
 
-# Function to handle placeholder text in the Job Description Text widget
 def on_focus_in(event):
     if text_job_description.get("1.0", "end-1c") == "Job Description":
         text_job_description.delete("1.0", "end")
@@ -201,13 +162,11 @@ def on_focus_out(event):
         text_job_description.insert("1.0", "Job Description")
         text_job_description.config(fg="grey")
 
-# Setting up the GUI
 root = tk.Tk()
 root.title("LaTeX to PDF Generator")
 root.geometry("700x600")
 root.resizable(False, False)
 
-# Main Page Widgets
 label_filename = tk.Label(root, text="File Name:", font=("Arial", 12))
 entry_filename = tk.Entry(root, width=60, font=("Arial", 12))
 
@@ -219,16 +178,27 @@ text_job_description.bind("<FocusOut>", on_focus_out)
 
 buttons_frame = tk.Frame(root)
 
-button_generate = tk.Button(
+button_generate_resume = tk.Button(
     buttons_frame,
-    text="Generate PDF",
-    command=on_generate,
+    text="Generate Resume",
+    command=on_generate_resume,
     font=("Arial", 12),
     bg="blue",
     fg="white",
     width=18
 )
-button_generate.pack(side=tk.LEFT, padx=5)
+button_generate_resume.pack(side=tk.LEFT, padx=5)
+
+button_generate_cover_letter = tk.Button(
+    buttons_frame,
+    text="Generate Cover Letter",
+    command=on_generate_cover_letter,
+    font=("Arial", 12),
+    bg="blue",
+    fg="white",
+    width=18
+)
+button_generate_cover_letter.pack(side=tk.LEFT, padx=5)
 
 button_create_background = tk.Button(
     buttons_frame,
@@ -252,8 +222,6 @@ button_test = tk.Button(
 )
 button_test.pack(side=tk.LEFT, padx=5)
 
-# Load the main page initially
 load_main_page()
 
-# Start the GUI event loop
 root.mainloop()
