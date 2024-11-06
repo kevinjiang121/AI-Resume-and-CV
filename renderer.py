@@ -93,7 +93,7 @@ def generate_pdf(file_name):
     success = latex_to_pdf(final_latex, output_filename=file_name)
     return success
 
-def generate_cover_letter(file_name, company_name, company_state, company_zipcode, company_city):
+def generate_cover_letter(file_name, company_name, company_state, company_zipcode, company_city, job_description):
     if not file_name.lower().endswith('.pdf'):
         file_name += '.pdf'
     
@@ -116,7 +116,8 @@ def generate_cover_letter(file_name, company_name, company_state, company_zipcod
         'companyname': company_name,
         'companystate': company_state,
         'companyaddress': company_city,
-        'companyzipcode': company_zipcode
+        'companyzipcode': company_zipcode,
+        # The job_description parameter is passed but not yet used in the context
     }
     
     # Replace placeholders in the template
@@ -124,7 +125,7 @@ def generate_cover_letter(file_name, company_name, company_state, company_zipcod
     
     # Generate PDF
     success = latex_to_pdf(final_latex, output_filename=file_name)
-    return success
+    return successj
 
 def call_openai_assistant(prompt):
     """

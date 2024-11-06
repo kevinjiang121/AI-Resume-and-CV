@@ -22,7 +22,7 @@ def openai_assistant_call(prompt, name):
     - name (str): The name to address the user as in the assistant's response.
     """
     experience = str(read_experience())
-    payload = prompt + " \n" + experience
+    payload = "Cover Letter" + " \n" + experience + "\n" + prompt
     
     try:
         # Send a message to the thread with the user-provided prompt
