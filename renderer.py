@@ -93,7 +93,7 @@ def generate_pdf(file_name):
     success = latex_to_pdf(final_latex, output_filename=file_name)
     return success
 
-def generate_cover_letter(file_name):
+def generate_cover_letter(file_name, company_name, company_state, company_zipcode, company_city):
     if not file_name.lower().endswith('.pdf'):
         file_name += '.pdf'
     
@@ -103,7 +103,7 @@ def generate_cover_letter(file_name):
     
     if not os.path.exists(template_path):
         raise FileNotFoundError(f"The template file was not found at '{template_path}'.")
-    
+
     # Read experience data
     experience = read_experience("experience.json")
     
@@ -112,7 +112,11 @@ def generate_cover_letter(file_name):
         'name': latexconfig.name,
         'email': latexconfig.email,
         'phonenumber': latexconfig.phonenumber,
-        'github': latexconfig.github
+        'github': latexconfig.github,
+        'company name': company_name,
+        'company state': company_state,
+        'company city': company_city,
+        'company zipcode': company_state
     }
     
     # Replace placeholders in the template

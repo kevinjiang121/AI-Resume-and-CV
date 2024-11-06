@@ -5,7 +5,6 @@ from tkinter import messagebox
 import renderer  # Ensure renderer.py is in the same directory or adjust the import path accordingly
 
 def on_generate_resume():
-    # Handler for the Generate Resume button.
     file_name = entry_filename.get().strip()
     if not file_name:
         messagebox.showwarning("Input Required", "Please enter a file name for the resume.")
@@ -18,22 +17,17 @@ def on_generate_resume():
     except Exception as e:
         messagebox.showerror("Failure", f"Resume generation failed.\n\n{e}")
 
-def on_generate_cover_letter():
-    # Handler for the Generate Cover Letter button.
-    file_name = entry_filename.get().strip()
-    if not file_name:
-        messagebox.showwarning("Input Required", "Please enter a file name for the cover letter.")
-        return
-    
-    try:
-        success = renderer.generate_cover_letter(file_name)
-        if success:
-            messagebox.showinfo("Success", f"Cover Letter '{file_name}' has been generated successfully in 'Resume and Cover Letter' folder.")
-    except Exception as e:
-        messagebox.showerror("Failure", f"Cover Letter generation failed.\n\n{e}")
+def load_main_page():
+    for widget in root.winfo_children():
+        widget.pack_forget()
+
+    label_filename.pack(pady=(20, 5))
+    entry_filename.pack(pady=(0, 10))
+    label_job_description.pack(pady=(0, 5))
+    text_job_description.pack(pady=(0, 20))
+    buttons_frame.pack(pady=(0, 20))
 
 def load_background_page():
-    # Clears the main GUI content and loads a new layout with two placeholder buttons.
     for widget in root.winfo_children():
         widget.pack_forget()
 
@@ -130,15 +124,74 @@ def load_personal_detail_page():
     )
     button_create_profile.pack(side=tk.LEFT, padx=5)
 
-def load_main_page():
+def load_cover_letter_page():
+    global entry_company_name, entry_company_state, entry_company_zipcode, entry_company_city
+
     for widget in root.winfo_children():
         widget.pack_forget()
 
-    label_filename.pack(pady=(20, 5))
-    entry_filename.pack(pady=(0, 10))
-    label_job_description.pack(pady=(0, 5))
-    text_job_description.pack(pady=(0, 20))
-    buttons_frame.pack(pady=(0, 20))
+    label_company_name = tk.Label(root, text="Company Name:", font=("Arial", 12))
+    label_company_name.pack(pady=(10, 5))
+    entry_company_name = tk.Entry(root, width=50, font=("Arial", 12))
+    entry_company_name.pack(pady=(0, 10))
+
+    label_company_state = tk.Label(root, text="Company State:", font=("Arial", 12))
+    label_company_state.pack(pady=(10, 5))
+    entry_company_state = tk.Entry(root, width=50, font=("Arial", 12))
+    entry_company_state.pack(pady=(0, 10))
+
+    label_company_zipcode = tk.Label(root, text="Company Zipcode:", font=("Arial", 12))
+    label_company_zipcode.pack(pady=(10, 5))
+    entry_company_zipcode = tk.Entry(root, width=50, font=("Arial", 12))
+    entry_company_zipcode.pack(pady=(0, 10))
+
+    label_company_city = tk.Label(root, text="Company City:", font=("Arial", 12))
+    label_company_city.pack(pady=(10, 5))
+    entry_company_city = tk.Entry(root, width=50, font=("Arial", 12))
+    entry_company_city.pack(pady=(0, 10))
+
+    buttons_frame = tk.Frame(root)
+    buttons_frame.pack(pady=(20, 10))
+
+    button_back_main = tk.Button(
+        buttons_frame,
+        text="Back to Main",
+        command=load_main_page,
+        font=("Arial", 12),
+        bg="red",
+        fg="white",
+        width=18
+    )
+    button_back_main.pack(side=tk.LEFT, padx=5)
+
+    button_generate_cover_letter = tk.Button(
+        buttons_frame,
+        text="Generate",
+        command=on_generate_cover_letter,
+        font=("Arial", 12),
+        bg="blue",
+        fg="white",
+        width=18
+    )
+    button_generate_cover_letter.pack(side=tk.LEFT, padx=5)
+
+def on_generate_cover_letter():
+    file_name = entry_filename.get().strip()
+    company_name = entry_company_name.get().strip()
+    company_state = entry_company_state.get().strip()
+    company_zipcode = entry_company_zipcode.get().strip()
+    company_city = entry_company_city.get().strip()
+
+    if not file_name:
+        messagebox.showwarning("Input Required", "Please enter a file name for the cover letter.")
+        return
+    
+    try:
+        success = renderer.generate_cover_letter(file_name, company_name, company_state, company_zipcode, company_city)
+        if success:
+            messagebox.showinfo("Success", f"Cover Letter '{file_name}' has been generated successfully in 'Resume and Cover Letter' folder.")
+    except Exception as e:
+        messagebox.showerror("Failure", f"Cover Letter generation failed.\n\n{e}")
 
 def on_test():
     prompt = text_job_description.get("1.0", "end-1c").strip()
@@ -192,7 +245,7 @@ button_generate_resume.pack(side=tk.LEFT, padx=5)
 button_generate_cover_letter = tk.Button(
     buttons_frame,
     text="Generate Cover Letter",
-    command=on_generate_cover_letter,
+    command=load_cover_letter_page,
     font=("Arial", 12),
     bg="blue",
     fg="white",
