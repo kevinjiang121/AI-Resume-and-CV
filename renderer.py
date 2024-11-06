@@ -113,10 +113,10 @@ def generate_cover_letter(file_name, company_name, company_state, company_zipcod
         'email': latexconfig.email,
         'phonenumber': latexconfig.phonenumber,
         'github': latexconfig.github,
-        'company name': company_name,
-        'company state': company_state,
-        'company city': company_city,
-        'company zipcode': company_state
+        'companyname': company_name,
+        'companystate': company_state,
+        'companyaddress': company_city,
+        'companyzipcode': company_zipcode
     }
     
     # Replace placeholders in the template
