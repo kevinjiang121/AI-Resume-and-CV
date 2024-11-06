@@ -107,7 +107,10 @@ def generate_cover_letter(file_name, company_name, company_state, company_zipcod
     # Read experience data
     experience = read_experience("experience.json")
     
-    # Define context with variables from latexconfig and rendered sections
+    # Call the assistant with the job description as the prompt
+    letter_content = call_openai_assistant(job_description)
+    
+    # Define context with variables from latexconfig, company info, and letter content
     context = {
         'name': latexconfig.name,
         'email': latexconfig.email,
@@ -117,7 +120,7 @@ def generate_cover_letter(file_name, company_name, company_state, company_zipcod
         'companystate': company_state,
         'companyaddress': company_city,
         'companyzipcode': company_zipcode,
-        # The job_description parameter is passed but not yet used in the context
+        'letter': letter_content  # Assistant's response added to context
     }
     
     # Replace placeholders in the template
@@ -125,25 +128,32 @@ def generate_cover_letter(file_name, company_name, company_state, company_zipcod
     
     # Generate PDF
     success = latex_to_pdf(final_latex, output_filename=file_name)
-    return successj
+    return success
+
 
 def call_openai_assistant(prompt):
     """
     Calls the OpenAI assistant with the provided prompt and name.
+    Returns the result as a string.
     """
     try:
         if not prompt:
             print("Prompt cannot be empty.")
-            return
+            return ""
 
         # Retrieve the name from latexconfig.py
         name = latexconfig.name
 
         # Call the openai_assistant_call method from chatgpt_api_call.py
-        chatgpt_api_call.openai_assistant_call(prompt, name)
+        result = chatgpt_api_call.openai_assistant_call(prompt, name)
+
+        # Return the result obtained from the assistant
+        return result
 
     except Exception as e:
         print(f"An error occurred while calling OpenAI Assistant: {e}")
+        return ""
+
 
 if __name__ == "__main__":
     # Here you can call functions to test the functionality

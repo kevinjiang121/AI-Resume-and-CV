@@ -15,18 +15,21 @@ client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 def openai_assistant_call(prompt, name):
     """
-    Sends a prompt to the OpenAI assistant and prints the response.
+    Sends a prompt to the OpenAI assistant and returns the response as a string.
 
     Parameters:
     - prompt (str): The user's input prompt.
     - name (str): The name to address the user as in the assistant's response.
+    
+    Returns:
+    - str: The assistant's response or an empty string if there was an error.
     """
     experience = str(read_experience())
     payload = "Cover Letter" + " \n" + experience + "\n" + prompt
     
     try:
         # Send a message to the thread with the user-provided prompt
-        message = client.beta.threads.messages.create(
+        client.beta.threads.messages.create(
             thread_id=os.getenv('THREAD_ID'),
             role="user",
             content=payload
@@ -38,19 +41,21 @@ def openai_assistant_call(prompt, name):
             assistant_id=os.getenv('ASSISTANT_ID')
         )
 
-        # Check run status and print response
+        # Check run status and get the response if completed
         if run.status == 'completed':
             messages = client.beta.threads.messages.list(
                 thread_id=os.getenv('THREAD_ID')
             )
             last_message = messages.data[0]
             response = last_message.content[0].text.value
-            print(response)
+            return response
         else:
             print(f"Run status: {run.status}")
-
+            return ""
     except Exception as e:
         print(f"An error occurred: {e}")
+        return ""
+
 
 def get_thread_history(thread_id):
     """
