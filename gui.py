@@ -3,9 +3,13 @@
 import tkinter as tk
 from tkinter import messagebox
 import renderer  # Ensure renderer.py is in the same directory or adjust the import path accordingly
+import threading  # For running API calls in a separate thread
+import math  # For trigonometric functions used in the loading animation
+import time  # To measure API request duration
 
 # Global variable to store job description
 job_description = ""
+loading_animation_active = False  # Global variable to control the loading animation
 
 def save_job_description():
     """
@@ -40,9 +44,11 @@ def load_main_page():
     buttons_frame.pack(pady=(0, 20))
 
 def load_background_page():
+    """
+    Placeholder function for the background page.
+    """
     save_job_description()  # Save the job description before switching pages
 
-    # Example of a basic placeholder for the background page.
     for widget in root.winfo_children():
         widget.pack_forget()
 
@@ -63,7 +69,7 @@ def load_background_page():
 def load_cover_letter_page():
     save_job_description()  # Save the job description before switching pages
 
-    global entry_company_name, entry_company_state, entry_company_zipcode, entry_company_city
+    global entry_company_name, entry_company_state, entry_company_zipcode, entry_company_city, loading_canvas
 
     for widget in root.winfo_children():
         widget.pack_forget()
@@ -105,7 +111,7 @@ def load_cover_letter_page():
     button_generate_cover_letter = tk.Button(
         buttons_frame,
         text="Generate",
-        command=on_generate_cover_letter,
+        command=start_cover_letter_generation,
         font=("Arial", 12),
         bg="blue",
         fg="white",
@@ -113,8 +119,60 @@ def load_cover_letter_page():
     )
     button_generate_cover_letter.pack(side=tk.LEFT, padx=5)
 
+    # Loading Animation Canvas with default background color
+    loading_canvas = tk.Canvas(root, width=100, height=100, highlightthickness=0)
+    loading_canvas.pack(pady=(10, 20))
+
+def start_cover_letter_generation():
+    # Save job description
+    save_job_description()
+    
+    # Show loading animation
+    start_loading_animation()
+
+    # Run API request in a separate thread to avoid freezing the GUI
+    threading.Thread(target=on_generate_cover_letter).start()
+
+def start_loading_animation():
+    global loading_animation_active
+    loading_animation_active = True
+    rotate_loading_animation(0)
+
+def stop_loading_animation():
+    global loading_animation_active
+    loading_animation_active = False
+    loading_canvas.delete("all")  # Clear the loading canvas
+
+def rotate_loading_animation(angle):
+    """
+    Displays a circular loading animation with varying shades of gray for a gradient effect.
+    """
+    if not loading_animation_active:
+        return
+
+    loading_canvas.delete("all")  # Clear the canvas
+
+    # Draw dots in a circular pattern
+    num_dots = 12
+    radius = 40
+    dot_radius = 5
+
+    for i in range(num_dots):
+        theta = (angle + i * (360 / num_dots)) * math.pi / 180  # Convert to radians
+        x = 50 + radius * math.cos(theta)
+        y = 50 + radius * math.sin(theta)
+        # Generate a shade of gray based on position in the cycle
+        shade = 255 - int((i / num_dots) * 200)
+        color = f"#{shade:02x}{shade:02x}{shade:02x}"  # Grayscale color without transparency
+        loading_canvas.create_oval(x - dot_radius, y - dot_radius, x + dot_radius, y + dot_radius, fill=color, outline="")
+
+    root.after(100, rotate_loading_animation, angle + 30)  # Rotate by 30 degrees for the next frame
+
 def on_generate_cover_letter():
-    save_job_description()  # Save the job description first
+    global loading_animation_active
+
+    # Capture start time
+    start_time = time.time()
 
     file_name = entry_filename.get().strip()
     company_name = entry_company_name.get().strip()
@@ -124,14 +182,23 @@ def on_generate_cover_letter():
 
     if not file_name:
         messagebox.showwarning("Input Required", "Please enter a file name for the cover letter.")
+        stop_loading_animation()
         return
     
     try:
-        success = renderer.generate_cover_letter(file_name, company_name, company_state, company_zipcode, company_city, job_description)
+        # Call generate_cover_letter and pass the job_description string along with other parameters
+        success, response_code = renderer.generate_cover_letter(file_name, company_name, company_state, company_zipcode, company_city, job_description)
+        
+        # Print API response code and duration
+        duration = time.time() - start_time
+        print(f"API Response Code: {response_code}, Duration: {duration:.2f} seconds")
+
         if success:
             messagebox.showinfo("Success", f"Cover Letter '{file_name}' has been generated successfully in 'Resume and Cover Letter' folder.")
     except Exception as e:
         messagebox.showerror("Failure", f"Cover Letter generation failed.\n\n{e}")
+    finally:
+        stop_loading_animation()  # Stop loading animation once done
 
 def on_test():
     save_job_description()  # Save the job description first
