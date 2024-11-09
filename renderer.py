@@ -23,6 +23,9 @@ def replace_placeholder(template_path, context):
         raise RuntimeError(f"An error occurred while rendering the template:\n{e}")
 
 def latex_to_pdf(latex_str, output_filename='output.pdf', output_folder='Resume and Cover Letter'):
+    # Replace all instances of 'C#' with the LaTeX-safe version '\texttt{C\#}'
+    latex_str = latex_str.replace('C#', r'\\texttt{C\\#}')
+    
     # Ensure the output folder exists
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -36,7 +39,7 @@ def latex_to_pdf(latex_str, output_filename='output.pdf', output_folder='Resume 
         
         # Compile LaTeX to PDF
         try:
-            subprocess.run(
+            result = subprocess.run(
                 ['pdflatex', '-interaction=nonstopmode', 'document.tex'],
                 cwd=temp_dir,
                 stdout=subprocess.PIPE,
@@ -44,8 +47,15 @@ def latex_to_pdf(latex_str, output_filename='output.pdf', output_folder='Resume 
                 text=True,
                 check=True
             )
+            print("LaTeX compilation succeeded.")
+            print("Output:\n", result.stdout)  # Optional, for successful output logs
+
         except subprocess.CalledProcessError as e:
-            raise RuntimeError(f"Failed to compile LaTeX document.\n\nError Output:\n{e.stderr}")
+            # Print detailed error output
+            print("Failed to compile LaTeX document.")
+            print("Standard Output:\n", e.stdout)
+            print("Error Output:\n", e.stderr)
+            raise RuntimeError(f"LaTeX compilation failed. See output above for details.")
         
         # Path to the generated PDF
         generated_pdf = os.path.join(temp_dir, 'document.pdf')
@@ -158,4 +168,4 @@ def call_openai_assistant(prompt):
 if __name__ == "__main__":
     # Here you can call functions to test the functionality
     # For example, to test the call_openai_assistant function:
-    call_openai_assistant("Hello") 
+    generate_pdf("data")
