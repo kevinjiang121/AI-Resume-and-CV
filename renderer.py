@@ -169,3 +169,4 @@ if __name__ == "__main__":
     # Here you can call functions to test the functionality
     # For example, to test the call_openai_assistant function:
     generate_pdf("data")
+    generate_cover_letter()
