@@ -187,11 +187,11 @@ def on_generate_cover_letter():
     
     try:
         # Call generate_cover_letter and pass the job_description string along with other parameters
-        success, response_code = renderer.generate_cover_letter(file_name, company_name, company_state, company_zipcode, company_city, job_description)
+        success = renderer.generate_cover_letter(file_name, company_name, company_state, company_zipcode, company_city, job_description)
         
         # Print API response code and duration
         duration = time.time() - start_time
-        print(f"API Response Code: {response_code}, Duration: {duration:.2f} seconds")
+        print(f"API Response Successful: {success}, Duration: {duration:.2f} seconds")
 
         if success:
             messagebox.showinfo("Success", f"Cover Letter '{file_name}' has been generated successfully in 'Resume and Cover Letter' folder.")

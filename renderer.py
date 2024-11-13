@@ -23,8 +23,8 @@ def replace_placeholder(template_path, context):
         raise RuntimeError(f"An error occurred while rendering the template:\n{e}")
 
 def latex_to_pdf(latex_str, output_filename='output.pdf', output_folder='Resume and Cover Letter'):
-    # Replace all instances of 'C#' with the LaTeX-safe version '\texttt{C\#}'
-    latex_str = latex_str.replace('C#', r'\\texttt{C\\#}')
+    # Escape all instances of '#' in the LaTeX string
+    latex_str = latex_str.replace('#', r'\#')
     
     # Ensure the output folder exists
     if not os.path.exists(output_folder):
@@ -69,6 +69,7 @@ def latex_to_pdf(latex_str, output_filename='output.pdf', output_folder='Resume 
                 raise RuntimeError(f"Failed to save PDF to '{output_folder}'.\n{e}")
         else:
             raise FileNotFoundError("PDF was not generated. Please check your LaTeX content.")
+
 
 def generate_pdf(file_name):
     if not file_name.lower().endswith('.pdf'):
@@ -168,5 +169,4 @@ def call_openai_assistant(prompt):
 if __name__ == "__main__":
     # Here you can call functions to test the functionality
     # For example, to test the call_openai_assistant function:
-    generate_pdf("data")
-    generate_cover_letter()
+    generate_cover_letter("Hi~", "ASD", "ASD", "ASD", "ASD", "Salesforce")
