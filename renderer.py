@@ -23,19 +23,25 @@ def replace_placeholder(template_path, context):
         raise RuntimeError(f"An error occurred while rendering the template:\n{e}")
 
 def latex_to_pdf(latex_str, output_filename='output.pdf', output_folder='Resume and Cover Letter'):
-    # Escape all instances of '#' in the LaTeX string
-    latex_str = latex_str.replace('#', r'\#')
-    
     # Ensure the output folder exists
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
+
+    # Define the base file name without extension
+    base_filename = os.path.splitext(output_filename)[0]
+    tex_output_path = os.path.join(output_folder, f"{base_filename}.tex")
     
+    # Save the LaTeX string as a .tex file in the output folder
+    with open(tex_output_path, 'w', encoding='utf-8') as tex_file:
+        tex_file.write(latex_str)
+
+    # Proceed with PDF generation in a temporary directory
     with tempfile.TemporaryDirectory() as temp_dir:
         tex_path = os.path.join(temp_dir, 'document.tex')
         
-        # Write LaTeX string to .tex file
-        with open(tex_path, 'w', encoding='utf-8') as tex_file:
-            tex_file.write(latex_str)
+        # Write LaTeX string to temporary .tex file for PDF compilation
+        with open(tex_path, 'w', encoding='utf-8') as temp_tex_file:
+            temp_tex_file.write(latex_str)
         
         # Compile LaTeX to PDF
         try:
@@ -69,6 +75,7 @@ def latex_to_pdf(latex_str, output_filename='output.pdf', output_folder='Resume 
                 raise RuntimeError(f"Failed to save PDF to '{output_folder}'.\n{e}")
         else:
             raise FileNotFoundError("PDF was not generated. Please check your LaTeX content.")
+
 
 
 def generate_pdf(file_name):
@@ -169,4 +176,4 @@ def call_openai_assistant(prompt):
 if __name__ == "__main__":
     # Here you can call functions to test the functionality
     # For example, to test the call_openai_assistant function:
-    generate_cover_letter("Hi~", "ASD", "ASD", "ASD", "ASD", "Salesforce")
+    generate_cover_letter("Hi5~", "ASD", "ASD", "ASD", "ASD", "Salesforce")
