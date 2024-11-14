@@ -6,6 +6,7 @@ import renderer  # Ensure renderer.py is in the same directory or adjust the imp
 import threading  # For running API calls in a separate thread
 import math  # For trigonometric functions used in the loading animation
 import time  # To measure API request duration
+import generate_background  # Import the module with background page functions
 
 # Global variable to store job description
 job_description = ""
@@ -25,7 +26,7 @@ def on_generate_resume():
     if not file_name:
         messagebox.showwarning("Input Required", "Please enter a file name for the resume.")
         return
-    
+
     try:
         success = renderer.generate_pdf(file_name)
         if success:
@@ -45,26 +46,12 @@ def load_main_page():
 
 def load_background_page():
     """
-    Placeholder function for the background page.
+    Displays the background information page using functions from generate_background.py.
     """
     save_job_description()  # Save the job description before switching pages
 
-    for widget in root.winfo_children():
-        widget.pack_forget()
-
-    label_background_info = tk.Label(root, text="Background Information Page", font=("Arial", 16))
-    label_background_info.pack(pady=(20, 20))
-
-    button_back_main = tk.Button(
-        root,
-        text="Back to Main",
-        command=load_main_page,
-        font=("Arial", 12),
-        bg="red",
-        fg="white",
-        width=18
-    )
-    button_back_main.pack(pady=(20, 20))
+    # Call the function from generate_background module
+    generate_background.load_background_page(root, load_main_page)
 
 def load_cover_letter_page():
     save_job_description()  # Save the job description before switching pages
@@ -94,11 +81,11 @@ def load_cover_letter_page():
     entry_company_city = tk.Entry(root, width=50, font=("Arial", 12))
     entry_company_city.pack(pady=(0, 10))
 
-    buttons_frame = tk.Frame(root)
-    buttons_frame.pack(pady=(20, 10))
+    buttons_frame_cover_letter = tk.Frame(root)
+    buttons_frame_cover_letter.pack(pady=(20, 10))
 
     button_back_main = tk.Button(
-        buttons_frame,
+        buttons_frame_cover_letter,
         text="Back to Main",
         command=load_main_page,
         font=("Arial", 12),
@@ -109,7 +96,7 @@ def load_cover_letter_page():
     button_back_main.pack(side=tk.LEFT, padx=5)
 
     button_generate_cover_letter = tk.Button(
-        buttons_frame,
+        buttons_frame_cover_letter,
         text="Generate",
         command=start_cover_letter_generation,
         font=("Arial", 12),
@@ -184,11 +171,11 @@ def on_generate_cover_letter():
         messagebox.showwarning("Input Required", "Please enter a file name for the cover letter.")
         stop_loading_animation()
         return
-    
+
     try:
         # Call generate_cover_letter and pass the job_description string along with other parameters
         success = renderer.generate_cover_letter(file_name, company_name, company_state, company_zipcode, company_city, job_description)
-        
+
         # Print API response code and duration
         duration = time.time() - start_time
         print(f"API Response Successful: {success}, Duration: {duration:.2f} seconds")
@@ -206,7 +193,7 @@ def on_test():
     if not job_description:
         messagebox.showwarning("Input Required", "Please enter a job description before testing.")
         return
-    
+
     try:
         renderer.call_openai_assistant(job_description)
         messagebox.showinfo("Success", "OpenAI Assistant has processed your job description.")
@@ -223,11 +210,13 @@ def on_focus_out(event):
         text_job_description.insert("1.0", "Job Description")
         text_job_description.config(fg="grey")
 
+# Initialize the main Tkinter window
 root = tk.Tk()
 root.title("LaTeX to PDF Generator")
 root.geometry("700x600")
 root.resizable(False, False)
 
+# Main page widgets
 label_filename = tk.Label(root, text="File Name:", font=("Arial", 12))
 entry_filename = tk.Entry(root, width=60, font=("Arial", 12))
 
@@ -283,6 +272,8 @@ button_test = tk.Button(
 )
 button_test.pack(side=tk.LEFT, padx=5)
 
+# Start the application by loading the main page
 load_main_page()
 
+# Start the Tkinter event loop
 root.mainloop()
