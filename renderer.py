@@ -94,10 +94,10 @@ def generate_pdf(file_name):
     
     # Define context with variables from latexconfig and rendered sections
     context = {
-        'name': latexconfig.name,
-        'email': latexconfig.email,
-        'phonenumber': latexconfig.phonenumber,
-        'github': latexconfig.github,
+        'name': latexconfig.name(),
+        'email': latexconfig.email(),
+        'phonenumber': latexconfig.phonenumber(),
+        'github': latexconfig.github(),
         'education': load_template.load_education(experience),
         'skills': load_template.load_skills(experience),
         'work_experience': load_template.load_work_experience(experience),
@@ -130,10 +130,10 @@ def generate_cover_letter(file_name, company_name, company_state, company_zipcod
     
     # Define context with variables from latexconfig, company info, and letter content
     context = {
-        'name': latexconfig.name,
-        'email': latexconfig.email,
-        'phonenumber': latexconfig.phonenumber,
-        'github': latexconfig.github,
+        'name': latexconfig.name(),
+        'email': latexconfig.email(),
+        'phonenumber': latexconfig.phonenumber(),
+        'github': latexconfig.github(),
         'companyname': company_name,
         'companystate': company_state,
         'companyaddress': company_city,
