@@ -27,6 +27,9 @@ def latex_to_pdf(latex_str, output_filename='output.pdf', output_folder='Resume 
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
+    # Escape '#' characters in the LaTeX string
+    latex_str = latex_str.replace('#', r'\#')
+
     # Define the base file name without extension
     base_filename = os.path.splitext(output_filename)[0]
     tex_output_path = os.path.join(output_folder, f"{base_filename}.tex")
