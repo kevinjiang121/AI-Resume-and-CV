@@ -7,7 +7,7 @@ from tkinter import messagebox
 
 def load_background_page(root, on_back):
     """
-    Displays the background information page with options to create personal profile or experience detail.
+    Displays the background information page with options to create personal profile or experience history.
 
     :param root: The main Tkinter window.
     :param on_back: A callback function to return to the main page.
@@ -33,16 +33,16 @@ def load_background_page(root, on_back):
     )
     button_create_personal_profile.pack(pady=5)
 
-    button_create_experience_detail = tk.Button(
+    button_create_experience_history = tk.Button(
         buttons_frame,
-        text="Create Experience Detail",
-        command=on_create_experience_detail,  # Placeholder function
+        text="Create Experience History",
+        command=lambda: on_create_experience_history(root, on_back, load_background_page),
         font=("Arial", 12),
         bg="blue",   # Blue button (non-navigation)
         fg="white",
         width=25
     )
-    button_create_experience_detail.pack(pady=5)
+    button_create_experience_history.pack(pady=5)
 
     button_back_main = tk.Button(
         buttons_frame,
@@ -177,12 +177,83 @@ def submit_profile(entry_name, entry_email, entry_phone, entry_github):
             json.dump(profile_data, json_file, indent=4)
 
         # Show a success message
-        messagebox.showinfo("Success", f"Personal profile saved successfully in '{file_path}'.")
-
+        messagebox.showinfo("Success", f"Personal profile saved successfully in '{file_path}'.\n\nlatexconfig.py will now retrieve these values.")
     except Exception as e:
         # Show an error message if something goes wrong
         messagebox.showerror("Error", f"An error occurred while saving the profile:\n{e}")
 
-def on_create_experience_detail():
-    # Placeholder for future functionality
+def on_create_experience_history(root, on_back, load_background_page):
+    """
+    Displays the experience history creation page with section titles and navigation buttons.
+
+    :param root: The main Tkinter window.
+    :param on_back: A callback function to return to the main page.
+    :param load_background_page: Function to load the background page.
+    """
+    # Clear existing widgets from root window
+    for widget in root.winfo_children():
+        widget.pack_forget()
+
+    label_title = tk.Label(root, text="Create Experience History", font=("Arial", 16))
+    label_title.pack(pady=(20, 10))
+
+    # Create a frame to hold all sections
+    sections_frame = tk.Frame(root)
+    sections_frame.pack(pady=(0, 20), fill=tk.BOTH, expand=True)
+
+    # Define the sections
+    sections = ["Work Experience", "Education", "Projects", "Skills"]
+
+    for i, section_name in enumerate(sections):
+        # Section label
+        label = tk.Label(sections_frame, text=section_name, font=("Arial", 12))
+        label.pack(anchor='w', padx=10, pady=(10 if i == 0 else 0, 5))
+
+        # Separator line except after the last section
+        if i < len(sections) - 1:
+            separator = tk.Frame(sections_frame, height=1, bd=1, relief=tk.SUNKEN, bg='grey')
+            separator.pack(fill=tk.X, padx=10, pady=10)
+
+    # Buttons frame
+    buttons_frame = tk.Frame(root)
+    buttons_frame.pack(pady=(10, 20))
+
+    # Back to Main Page
+    button_back_main = tk.Button(
+        buttons_frame,
+        text="Back to Main Page",
+        command=on_back,
+        font=("Arial", 12),
+        bg="red",    # Red button (navigation)
+        fg="white",
+        width=18
+    )
+    button_back_main.pack(side=tk.LEFT, padx=5)
+
+    # Back to Create Background Page
+    button_back_background = tk.Button(
+        buttons_frame,
+        text="Back to Background Page",
+        command=lambda: load_background_page(root, on_back),
+        font=("Arial", 12),
+        bg="red",    # Red button (navigation)
+        fg="white",
+        width=22
+    )
+    button_back_background.pack(side=tk.LEFT, padx=5)
+
+    # Submit Experience
+    button_submit_experience = tk.Button(
+        buttons_frame,
+        text="Submit Experience",
+        command=lambda: submit_experience(),
+        font=("Arial", 12),
+        bg="blue",   # Blue button (non-navigation)
+        fg="white",
+        width=18
+    )
+    button_submit_experience.pack(side=tk.LEFT, padx=5)
+
+def submit_experience():
+    # For now, this function does nothing
     pass
