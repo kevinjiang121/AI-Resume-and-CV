@@ -184,7 +184,7 @@ def submit_profile(entry_name, entry_email, entry_phone, entry_github):
 
 def on_create_experience_history(root, on_back, load_background_page):
     """
-    Displays the experience history creation page with section titles and navigation buttons.
+    Displays the experience history creation page with section titles, 'Add More' buttons (non-functional), and navigation buttons.
 
     :param root: The main Tkinter window.
     :param on_back: A callback function to return to the main page.
@@ -208,6 +208,18 @@ def on_create_experience_history(root, on_back, load_background_page):
         # Section label
         label = tk.Label(sections_frame, text=section_name, font=("Arial", 12))
         label.pack(anchor='w', padx=10, pady=(10 if i == 0 else 0, 5))
+
+        # 'Add More' button (non-functional)
+        add_more_button = tk.Button(
+            sections_frame,
+            text="Add More",
+            # No functionality at the moment
+            font=("Arial", 12),
+            bg="blue",   # Blue button (non-navigation)
+            fg="white",
+            width=10
+        )
+        add_more_button.pack(anchor='w', padx=10, pady=5)
 
         # Separator line except after the last section
         if i < len(sections) - 1:
