@@ -1,6 +1,6 @@
 import json
 
-def read_experience(file_path='experience.json'):
+def read_experience(file_path='Background and Experience/experience.json'):
     try:
         with open(file_path, 'r') as file:
             experience = json.load(file)

@@ -7,7 +7,7 @@ from jinja2 import Template
 from read_experience import read_experience
 import load_template
 import latexconfig  # Ensure this imports the necessary variables
-import chatgpt_api_call  # Import the chatgpt_api_call module
+import Legacy.chatgpt_api_call as chatgpt_api_call  # Import the chatgpt_api_call module
 
 def replace_placeholder(template_path, context):
     try:
