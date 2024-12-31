@@ -3,8 +3,6 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI  # Ensure this import is correct based on your OpenAI library usage
-import load_template
-import json
 from read_experience import read_experience
 
 # Load environment variables from .env file
