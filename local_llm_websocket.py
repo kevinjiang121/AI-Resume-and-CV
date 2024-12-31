@@ -1,5 +1,4 @@
 import json
-import random
 from dotenv import load_dotenv
 import random
 import websocket_handler as wh
@@ -33,20 +32,19 @@ def get_chat_output(prompt_input, file_path):
 def get_index_of_nodes_chat():
     prompt = None
     output = None
-    json_file_path = "Local LLM Layouts/Cover Letter.json"
-    print(json_file_path)
+
+    json_file_path = "Local LLM Layouts/Resume.json"
 
     with open(json_file_path, 'r') as file:
         input_graph = json.load(file)
     
     for index, data in input_graph.items():
-        print(data)
         if data["_meta"]["title"] == "User Prompt":
             prompt = index
-        if data["_meta"]["title"] == "Show Text":
+        if data["_meta"]["title"] == "Show Text (Output)":
             output = index
 
     return prompt, output
 
 if __name__ == "__main__":
-    print(get_chat_output("Software Engineer position at Google", "Local LLM Layouts/Cover Letter.json"))
+    print()

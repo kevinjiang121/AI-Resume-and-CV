@@ -8,6 +8,7 @@ from read_experience import read_experience
 import load_template
 import latexconfig  # Ensure this imports the necessary variables
 import Legacy.chatgpt_api_call as chatgpt_api_call  # Import the chatgpt_api_call module
+import local_llm_websocket as llw
 
 def replace_placeholder(template_path, context):
     try:
@@ -124,12 +125,9 @@ def generate_cover_letter(file_name, company_name, company_state, company_zipcod
     
     if not os.path.exists(template_path):
         raise FileNotFoundError(f"The template file was not found at '{template_path}'.")
-
-    # Read experience data
-    experience = read_experience("experience.json")
     
     # Call the assistant with the job description as the prompt
-    letter_content = call_openai_assistant(job_description)
+    letter_content = llw.get_chat_output(job_description, "Local LLM Layouts/Cover Letter.json")
     
     # Define context with variables from latexconfig, company info, and letter content
     context = {
